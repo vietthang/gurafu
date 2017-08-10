@@ -3,7 +3,7 @@ import * as assert from 'assert'
 
 const descriptionSymbol = Symbol('description')
 
-const parametersDescriptionSymbol = Symbol('parametersSymbol')
+const parametersDescriptionSymbol = Symbol('parameterDefaults')
 
 export function Description(description: string): Function {
   return (target: any, key?: string, index?: number) => {
