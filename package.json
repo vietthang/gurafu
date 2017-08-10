@@ -5,7 +5,7 @@
   "main": "build/src/index.js",
   "scripts": {
     "compile": "tsc",
-    "bundle": "dts-bundle --name sukima --main build/src/index.d.ts",
+    "bundle": "dts-bundle --name gurafu --main build/src/index.d.ts",
     "watch": "tsc --watch",
     "unit": "NODE_ENV=test mocha --recursive --compilers ts:ts-node/register --bail src/**/*.spec.ts",
     "unit:prebuilt": "NODE_ENV=test mocha --recursive --bail build/src/**/*.spec.js",
@@ -45,7 +45,7 @@
     "graphql-date": "^1.0.3",
     "reflect-metadata": "^0.1.10"
   },
-  "typings": "build/src/sukima.d.ts",
+  "typings": "build/src/gurafu.d.ts",
   "nyc": {
     "include": [
       "src/*.ts",
