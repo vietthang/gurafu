@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    "rootDir": ".",
+    "target": "ES5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "removeComments": true,
+    "stripInternal": true,
+    "declaration": true,
+    "lib": ["es6", "esnext.asynciterable"],
+    "noStrictGenericChecks": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "compileOnSave": false
+}
