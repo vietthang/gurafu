@@ -43,8 +43,7 @@
   "dependencies": {
     "graphql": "^0.10.5",
     "graphql-date": "^1.0.3",
-    "reflect-metadata": "^0.1.10",
-    "sukima": "^0.14.11"
+    "reflect-metadata": "^0.1.10"
   },
   "typings": "build/src/sukima.d.ts",
   "nyc": {
