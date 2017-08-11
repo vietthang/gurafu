@@ -20,7 +20,7 @@ describe('Test @Default decorator', () => {
   it('Should add correct metadata to function parameter', () => {
     class Dummy {
       callSomething(@Default('Argument 0') arg0: number) {
-        console.log('Empty')
+        return
       }
     }
     assert.equal(getDefault(Dummy, 'callSomething', 0), 'Argument 0')
@@ -29,7 +29,7 @@ describe('Test @Default decorator', () => {
   it('Should get undefined description if property have not decorated with @Description', () => {
     class Dummy {
       callSomething(arg0: number) {
-        console.log('Empty')
+        return
       }
     }
     assert.equal(getDefault(Dummy, 'callSomething', 0), undefined)

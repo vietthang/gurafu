@@ -1,49 +1,42 @@
 import 'reflect-metadata'
-import * as assert from 'assert'
-import { GraphQLObjectType, GraphQLOutputType, GraphQLSchema } from 'graphql'
 
-import { resolveToObjectType } from './objectType'
+import { Field } from './field'
 
-const mutationSymbol = Symbol('mutation')
+const typeSymbol = Symbol('type')
 
-const querySymbol = Symbol('query')
-
-export function Mutation(type?: GraphQLOutputType | Function): PropertyDecorator {
+export function Mutation(name?: string): PropertyDecorator {
   return (target, key) => {
-    assert.equal(typeof key, 'string')
-    Reflect.defineMetadata(mutationSymbol, key, target)
+    const oldType = Reflect.getMetadata(typeSymbol, target, key)
+    if (oldType) {
+      throw new Error(`Key ${key} has been decorated with ${oldType} already`)
+    }
+    Field(name)(target, key)
+    Reflect.defineMetadata(typeSymbol, '@Mutation', target, key)
   }
 }
 
-export function Query(): PropertyDecorator {
+export function Query(name?: string): PropertyDecorator {
   return (target, key) => {
-    assert.equal(typeof key, 'string')
-    Reflect.defineMetadata(querySymbol, key, target)
+    const oldType = Reflect.getMetadata(typeSymbol, target, key)
+    if (oldType) {
+      throw new Error(`Key ${key} has been decorated with ${oldType} already`)
+    }
+    Field(name)(target, key)
+    Reflect.defineMetadata(typeSymbol, '@Query', target, key)
   }
 }
 
-export function buildGraphQLSchema(target: Function): GraphQLSchema {
-  const queryField = Reflect.getMetadata(querySymbol, target.prototype)
-  if (!queryField) {
-    throw new Error('Missing @Query')
+export function Subscription(name?: string): PropertyDecorator {
+  return (target, key) => {
+    const oldType = Reflect.getMetadata(typeSymbol, target, key)
+    if (oldType) {
+      throw new Error(`Key ${key} has been decorated with ${oldType} already`)
+    }
+    Field(name)(target, key)
+    Reflect.defineMetadata(typeSymbol, '@Subscription', target, key)
   }
+}
 
-  const queryDesignType = Reflect.getMetadata('design:type', target.prototype, queryField)
-  assert.equal(typeof queryDesignType, 'function')
-  const queryType = resolveToObjectType(queryDesignType)
-  assert(queryType)
-
-  let mutationType: GraphQLObjectType | undefined
-  const mutationField = Reflect.getMetadata(mutationSymbol, target.prototype)
-  if (mutationField) {
-    const mutationDesignType = Reflect.getMetadata('design:type', target.prototype, mutationField)
-    assert(typeof mutationDesignType, 'function')
-    mutationType = resolveToObjectType(mutationDesignType)
-    assert(mutationField)
-  }
-
-  return new GraphQLSchema({
-    query: queryType!,
-    mutation: mutationType,
-  })
+export function getType(target: Function, key: string): '@Mutation' | '@Query' | '@Subscription' | undefined {
+  return Reflect.getMetadata(typeSymbol, target.prototype, key)
 }

@@ -8,11 +8,16 @@ import {
   GraphQLInputObjectType,
   GraphQLUnionType,
   GraphQLEnumType,
+  GraphQLInterfaceType,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLBoolean,
+  GraphQLFloat,
+  GraphQLString,
 } from 'graphql'
+import * as GraphQLDate from 'graphql-date'
 
-import { resolveToObjectType, resolveToInputObjectType } from './objectType'
+import { objectTypeFactory, inputObjectTypeFactory } from '../factory/objectTypeFactory'
 
 const typeSymbol = Symbol('type')
 
@@ -25,19 +30,32 @@ export interface GraphQLTypeResolver {
 
 export type TypeResolvable = GraphQLTypeResolver | GraphQLType | Function
 
-function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
+export function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
   const anyType: any = type
   if (anyType.resolveToInputType && anyType.resolveToOutputType) {
     return anyType
   }
 
   if (typeof type === 'function') {
+    switch (type) {
+      case Boolean:
+        return createTypeResolver(GraphQLBoolean)
+      case Number:
+        return createTypeResolver(GraphQLFloat)
+      case String:
+        return createTypeResolver(GraphQLString)
+      case Date:
+        return createTypeResolver(GraphQLDate)
+      case Object:
+        throw new Error('Failed to resolve GraphQLType. The design type are too generic.')
+    }
+
     return {
       resolveToInputType() {
-        return resolveToInputObjectType(type)
+        return inputObjectTypeFactory(type)
       },
       resolveToOutputType() {
-        return resolveToObjectType(type)
+        return objectTypeFactory(type)
       },
     }
   }
@@ -97,6 +115,17 @@ function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
     }
   }
 
+  if (type instanceof GraphQLInterfaceType) {
+    return {
+      resolveToInputType(): GraphQLInputType {
+        throw new Error('Can not convert GraphQLInterfaceType to input type')
+      },
+      resolveToOutputType() {
+        return type
+      },
+    }
+  }
+
   if (type instanceof GraphQLNonNull) {
     return {
       resolveToInputType() {
@@ -122,7 +151,7 @@ function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
   throw new Error('Can not create type resolver')
 }
 
-export function Type(type: GraphQLType | Function | GraphQLTypeResolver): Function {
+export function Type(type: TypeResolvable): Function {
   return (target: Object, key: string, index?: number) => {
     if (index !== undefined) {
       const parameterTypes = Reflect.getMetadata(parameterTypesSymbol, target) || {}

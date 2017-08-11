@@ -1,82 +1,59 @@
 import 'mocha'
 import * as assert from 'assert'
-import { GraphQLSchema } from 'graphql'
 
-import { ObjectType, resolveToObjectType } from './objectType'
-import { Mutation, Query, buildGraphQLSchema } from './schema'
-import { Arg, Field } from './field'
+import { Mutation, Query, Subscription, getType } from './schema'
 
-@ObjectType() class User {
-  @Field()
-  id: string
-
-  @Field()
-  email: string
-}
-@ObjectType() class UserUpdate {
-  @Field()
-  email: string
-}
-@ObjectType() class SchemaMutation {
-  @Field()
-  updateUser(
-    @Arg({ name: 'id' }) id: string,
-    @Arg({ name: 'body' }) body: UserUpdate,
-  ): User {
-    const user = new User()
-    user.id = id
-    user.email = body.email
-    return user
-  }
-}
-@ObjectType() class SchemaQuery {
-  @Field()
-  me(): User {
-    const user = new User()
-    user.id = 'id'
-    user.email = 'email'
-    return user
-  }
-}
-
-describe('Test Schema', () => {
-  it('Should create new GraphQLSchema correctly', () => {
-
+describe('Test @Query/@Mutation/@Subscription', () => {
+  it('Should generate metadata correctly', () => {
     class Schema {
-      @Mutation()
-      mutation: SchemaMutation
+      @Mutation() createUser: any
 
-      @Query()
-      query: SchemaQuery
+      @Mutation() updateUser: any
+
+      @Query() users() {
+        return []
+      }
+
+      @Subscription() userChanged() {
+        return
+      }
+
+      notDecorated: any
+
     }
 
-    const graphQLSchema = buildGraphQLSchema(Schema)
-    assert.deepEqual(graphQLSchema, new GraphQLSchema({
-      query: resolveToObjectType(SchemaQuery),
-      mutation: resolveToObjectType(SchemaMutation),
-    }))
+    assert.equal(getType(Schema, 'createUser'), '@Mutation')
+    assert.equal(getType(Schema, 'updateUser'), '@Mutation')
+    assert.equal(getType(Schema, 'users'), '@Query')
+    assert.equal(getType(Schema, 'userChanged'), '@Subscription')
+    assert.equal(getType(Schema, 'invalid'), undefined)
+    assert.equal(getType(Schema, 'notDecorated'), undefined)
   })
 
-  it('Should fail to create GraphQLSchema without @Query', () => {
-    class Schema {
-      @Mutation()
-      mutation: SchemaMutation
-
-      query: SchemaQuery
-    }
-
-    assert.throws(() => buildGraphQLSchema(Schema))
-  })
-
-  it('Should create new GraphQLSchema correctly without @Mutation', () => {
-    class Schema {
-      @Query()
-      query: SchemaQuery
-    }
-
-    const graphQLSchema = buildGraphQLSchema(Schema)
-    assert.deepEqual(graphQLSchema, new GraphQLSchema({
-      query: resolveToObjectType(SchemaQuery),
-    }))
+  it('Should failed if a field decorated with more than 1 time', () => {
+    assert.throws(() => {
+      class Dummy {
+        @Query()
+        @Query()
+        invalid: any
+      }
+      new Dummy()
+    })
+    assert.throws(() => {
+      class Dummy {
+        @Mutation()
+        @Query()
+        invalid: any
+      }
+      new Dummy()
+    })
+    assert.throws(() => {
+      class Dummy {
+        @Subscription()
+        @Query()
+        invalid: any
+      }
+      new Dummy()
+    })
   })
 })

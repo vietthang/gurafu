@@ -11,7 +11,7 @@ import {
   GraphQLNonNull,
 } from 'graphql'
 
-import { ObjectType, resolveToObjectType, resolveToInputObjectType } from './objectType'
+import { ObjectType } from './objectType'
 import { Field } from './field'
 import { Type, getTypeResolver, List, NonNull } from './type'
 
@@ -160,8 +160,30 @@ describe('Test @Type/@List/@NonNull decorators', () => {
     }
 
     const resolver = getTypeResolver(Dummy, 'id')!
-    assert.deepStrictEqual(resolver.resolveToInputType(), resolveToInputObjectType(A))
-    assert.deepStrictEqual(resolver.resolveToOutputType(), resolveToObjectType(A))
+    assert.deepStrictEqual(resolver.resolveToInputType(), new GraphQLInputObjectType({
+      name: 'AInput',
+      description: undefined,
+      fields: {
+        id: {
+          type: GraphQLString,
+          description: undefined,
+          defaultValue: undefined,
+        }
+      },
+    }))
+    assert.deepStrictEqual(resolver.resolveToOutputType(), new GraphQLObjectType({
+      name: 'A',
+      description: undefined,
+      fields: {
+        id: {
+          type: GraphQLString,
+          description: undefined,
+          args: undefined,
+          deprecationReason: undefined,
+          resolve: undefined,
+        }
+      },
+    }))
   })
 
   it('Should decorate using @List correctly', () => {
