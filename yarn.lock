@@ -12,6 +12,12 @@
   dependencies:
     "@types/graphql" "*"
 
+"@types/graphql-relay@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@types/graphql-relay/-/graphql-relay-0.4.2.tgz#d26bb1e793bb265e4dbcd705f58d42ee84d02d3f"
+  dependencies:
+    "@types/graphql" "*"
+
 "@types/graphql@*", "@types/graphql@^0.10.2":
   version "0.10.2"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.10.2.tgz#d7c79acbaa17453b6681c80c34b38fcb10c4c08c"
@@ -662,6 +668,10 @@ graphql-date@^1.0.3:
   resolved "https://registry.yarnpkg.com/graphql-date/-/graphql-date-1.0.3.tgz#31ce05ae40ed8c8ceb040364060109771e712e91"
   dependencies:
     assert-err "^1.0.0"
+
+graphql-relay@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/graphql-relay/-/graphql-relay-0.5.2.tgz#40ff714efd60c2cd89e0bcc79e2afa6d87fa8673"
 
 graphql@^0.10.5:
   version "0.10.5"

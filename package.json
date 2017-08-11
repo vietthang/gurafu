@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/graphql": "^0.10.2",
     "@types/graphql-date": "^1.0.1",
+    "@types/graphql-relay": "^0.4.2",
     "@types/knex": "^0.0.57",
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.10",
@@ -43,6 +44,7 @@
   "dependencies": {
     "graphql": "^0.10.5",
     "graphql-date": "^1.0.3",
+    "graphql-relay": "^0.5.2",
     "reflect-metadata": "^0.1.10"
   },
   "typings": "build/src/gurafu.d.ts",
@@ -67,5 +69,6 @@
       "html"
     ],
     "all": true
-  }
+  },
+  "optionalDependencies": {}
 }
