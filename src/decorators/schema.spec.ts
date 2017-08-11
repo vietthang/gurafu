@@ -6,6 +6,8 @@ import { Mutation, Query, Subscription, getType } from './schema'
 describe('Test @Query/@Mutation/@Subscription', () => {
   it('Should generate metadata correctly', () => {
     class Schema {
+      notDecorated: any
+
       @Mutation() createUser: any
 
       @Mutation() updateUser: any
@@ -17,9 +19,6 @@ describe('Test @Query/@Mutation/@Subscription', () => {
       @Subscription() userChanged() {
         return
       }
-
-      notDecorated: any
-
     }
 
     assert.equal(getType(Schema, 'createUser'), '@Mutation')

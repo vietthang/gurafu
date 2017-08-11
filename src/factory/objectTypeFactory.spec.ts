@@ -23,8 +23,8 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
           deprecationReason: undefined,
           args: undefined,
           resolve: undefined,
-        }
-      }
+        },
+      },
     }))
   })
 
@@ -42,8 +42,8 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
           type: GraphQLString,
           description: undefined,
           defaultValue: undefined,
-        }
-      }
+        },
+      },
     }))
   })
 

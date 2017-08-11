@@ -53,7 +53,7 @@ describe('Test @Type/@List/@NonNull decorators', () => {
         },
         inactive: {
           value: 0,
-        }
+        },
       },
     })
     class Dummy {
@@ -70,7 +70,7 @@ describe('Test @Type/@List/@NonNull decorators', () => {
       name: 'Object1',
       fields: {
         id1: {
-          type: GraphQLString
+          type: GraphQLString,
         },
       },
     })
@@ -78,7 +78,7 @@ describe('Test @Type/@List/@NonNull decorators', () => {
       name: 'Object2',
       fields: {
         id2: {
-          type: GraphQLString
+          type: GraphQLString,
         },
       },
     })
@@ -100,7 +100,7 @@ describe('Test @Type/@List/@NonNull decorators', () => {
       name: 'Object',
       fields: {
         id: {
-          type: GraphQLString
+          type: GraphQLString,
         },
       },
     })
@@ -118,7 +118,7 @@ describe('Test @Type/@List/@NonNull decorators', () => {
       name: 'Object',
       fields: {
         id: {
-          type: GraphQLString
+          type: GraphQLString,
         },
       },
     })
@@ -168,7 +168,7 @@ describe('Test @Type/@List/@NonNull decorators', () => {
           type: GraphQLString,
           description: undefined,
           defaultValue: undefined,
-        }
+        },
       },
     }))
     assert.deepStrictEqual(resolver.resolveToOutputType(), new GraphQLObjectType({
@@ -181,7 +181,7 @@ describe('Test @Type/@List/@NonNull decorators', () => {
           args: undefined,
           deprecationReason: undefined,
           resolve: undefined,
-        }
+        },
       },
     }))
   })
