@@ -11,6 +11,7 @@ import { getTypeResolver, createTypeResolver } from '../decorators/type'
 import { getDepricationReason } from '../decorators/deprecated'
 import { getArgName, getContextIndex, getInfoIndex } from '../decorators/arg'
 import { getDefault } from '../decorators/default'
+import { once, Callable1 } from '../utils'
 
 function mapValues<T, U>(input: { [key: string]: T }, iteratee: (ele: T, key: string) => U): { [key: string]: U } {
   return Object.keys(input).reduce(
@@ -24,7 +25,7 @@ function mapValues<T, U>(input: { [key: string]: T }, iteratee: (ele: T, key: st
   )
 }
 
-export function fieldsFactory(target: Function): GraphQLFieldConfigMap<any, any> {
+export const fieldsFactory: Callable1<Function, GraphQLFieldConfigMap<any, any>> = once((target: Function) => {
   const fieldNameMap = getFieldNameMap(target)
   if (!fieldNameMap) {
     throw new Error(`Can not find field info in ${target.name} class`)
@@ -108,9 +109,9 @@ export function fieldsFactory(target: Function): GraphQLFieldConfigMap<any, any>
     },
     {},
   )
-}
+})
 
-export function inputFieldsFactory(target: Function): GraphQLInputFieldConfigMap {
+export const inputFieldsFactory: Callable1<Function, GraphQLInputFieldConfigMap> = once((target: Function) => {
   const fieldNameMap = getFieldNameMap(target)
   if (!fieldNameMap) {
     throw new Error(`Can not find field info in ${target.name} class`)
@@ -131,4 +132,4 @@ export function inputFieldsFactory(target: Function): GraphQLInputFieldConfigMap
       defaultValue: getDefault(target, key),
     }
   })
-}
+})

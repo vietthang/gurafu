@@ -173,7 +173,7 @@ export function getTypeResolver(target: Function, key: string, index?: number): 
   }
 }
 
-export function List(type: GraphQLType | Function | GraphQLTypeResolver): Function & GraphQLTypeResolver {
+export function List(type: TypeResolvable): Function & GraphQLTypeResolver {
   const subTypeResolver = createTypeResolver(type)
   const typeResolver = {
     resolveToInputType() {
@@ -191,7 +191,7 @@ export function List(type: GraphQLType | Function | GraphQLTypeResolver): Functi
   )
 }
 
-export function NonNull(type: GraphQLType | Function | GraphQLTypeResolver): Function & GraphQLTypeResolver {
+export function NonNull(type: TypeResolvable): Function & GraphQLTypeResolver {
   const subTypeResolver = createTypeResolver(type)
   const typeResolver = {
     resolveToInputType() {

@@ -160,30 +160,32 @@ describe('Test @Type/@List/@NonNull decorators', () => {
     }
 
     const resolver = getTypeResolver(Dummy, 'id')!
-    assert.deepStrictEqual(resolver.resolveToInputType(), new GraphQLInputObjectType({
-      name: 'AInput',
-      description: undefined,
-      fields: {
-        id: {
-          type: GraphQLString,
-          description: undefined,
-          defaultValue: undefined,
-        },
+    const dummyInputObjectType = resolver.resolveToInputType() as GraphQLInputObjectType
+    assert.equal(dummyInputObjectType.name, 'AInput')
+    assert.equal(dummyInputObjectType.description, undefined)
+    assert.deepEqual(dummyInputObjectType.getFields(), {
+      id: {
+        name: 'id',
+        type: GraphQLString,
+        description: undefined,
+        defaultValue: undefined,
       },
-    }))
-    assert.deepStrictEqual(resolver.resolveToOutputType(), new GraphQLObjectType({
-      name: 'A',
-      description: undefined,
-      fields: {
-        id: {
-          type: GraphQLString,
-          description: undefined,
-          args: undefined,
-          deprecationReason: undefined,
-          resolve: undefined,
-        },
+    })
+
+    const dummyObjectType = resolver.resolveToOutputType() as GraphQLObjectType
+    assert.equal(dummyObjectType.name, 'A')
+    assert.equal(dummyObjectType.description, undefined)
+    assert.deepEqual(dummyObjectType.getFields(), {
+      id: {
+        name: 'id',
+        type: GraphQLString,
+        description: undefined,
+        args: [],
+        deprecationReason: undefined,
+        isDeprecated: false,
+        resolve: undefined,
       },
-    }))
+    })
   })
 
   it('Should decorate using @List correctly', () => {

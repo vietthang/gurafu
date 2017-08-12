@@ -1,6 +1,6 @@
 import 'mocha'
 import * as assert from 'assert'
-import { GraphQLString, GraphQLObjectType, GraphQLInputObjectType } from 'graphql'
+import { GraphQLString } from 'graphql'
 
 import { ObjectType } from '../decorators/objectType'
 import { Field } from '../decorators/field'
@@ -13,19 +13,18 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
     }
 
     const objectType = objectTypeFactory(User)
-    assert.deepEqual(objectType, new GraphQLObjectType({
-      name: 'User',
-      description: undefined,
-      fields: {
-        id: {
-          type: GraphQLString,
-          description: undefined,
-          deprecationReason: undefined,
-          args: undefined,
-          resolve: undefined,
-        },
+    assert.equal(objectType.name, 'User')
+    assert.deepEqual(objectType.getFields(), {
+      id: {
+        name: 'id',
+        type: GraphQLString,
+        description: undefined,
+        args: [],
+        deprecationReason: undefined,
+        isDeprecated: false,
+        resolve: undefined,
       },
-    }))
+    })
   })
 
   it('Should generate GraphQLInputObjectType with simple fields correctly', () => {
@@ -34,17 +33,15 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
     }
 
     const inputObjectType = inputObjectTypeFactory(User)
-    assert.deepEqual(inputObjectType, new GraphQLInputObjectType({
-      name: 'UserInput',
-      description: undefined,
-      fields: {
-        id: {
-          type: GraphQLString,
-          description: undefined,
-          defaultValue: undefined,
-        },
+    assert.equal(inputObjectType.name, 'UserInput')
+    assert.deepEqual(inputObjectType.getFields(), {
+      id: {
+        name: 'id',
+        type: GraphQLString,
+        description: undefined,
+        defaultValue: undefined,
       },
-    }))
+    })
   })
 
   it('Should generate same GraphQLInputObjectType everytime', () => {

@@ -18,7 +18,7 @@ export const objectTypeFactory: Callable1<Function,GraphQLObjectType> = once((ta
   return new GraphQLObjectType({
     name,
     description,
-    fields: fieldsFactory(target),
+    fields: () => fieldsFactory(target),
   })
 })
 
@@ -32,6 +32,6 @@ export const inputObjectTypeFactory: Callable1<Function,GraphQLInputObjectType> 
   return new GraphQLInputObjectType({
     name: name + 'Input',
     description,
-    fields: inputFieldsFactory(target),
+    fields: () => inputFieldsFactory(target),
   })
 })

@@ -3,41 +3,43 @@ import { GraphQLObjectType, GraphQLSchema, GraphQLFieldConfigMap } from 'graphql
 import { getType } from '../decorators/schema'
 import { fieldsFactory } from './fieldsFactory'
 
-export function schemaFactory(target: Function): GraphQLSchema {
-  const fieldConfigMap = fieldsFactory(target)
+function getFieldsByType(targets: Function[], fieldType: string): GraphQLFieldConfigMap<any, any> {
+  return targets.reduce<GraphQLFieldConfigMap<any, any>>(
+    (prev, target) => {
+      const fieldConfigMap = fieldsFactory(target)
 
-  const queryFields = Object.keys(fieldConfigMap).reduce<GraphQLFieldConfigMap<any, any>>(
-    (prev, key) => {
-      const type = getType(target, key)
-      if (type === '@Query') {
-        return {
-          ...prev,
-          [key]: fieldConfigMap[key],
-        }
+      const fields = Object.keys(fieldConfigMap).reduce<GraphQLFieldConfigMap<any, any>>(
+        (prev, key) => {
+          const type = getType(target, key)
+          if (type === fieldType) {
+            return {
+              ...prev,
+              [key]: fieldConfigMap[key],
+            }
+          }
+          return prev
+        },
+        {},
+      )
+
+      return {
+        ...prev,
+        ...fields,
       }
-      return prev
     },
     {},
   )
+}
+
+export function schemaFactory(...targets: Function[]): GraphQLSchema {
+  const queryFields = getFieldsByType(targets, '@Query')
   const queryObjectType = new GraphQLObjectType({
     name: 'Query',
     description: 'Root query',
     fields: queryFields,
   })
 
-  const mutationFields = Object.keys(fieldConfigMap).reduce<GraphQLFieldConfigMap<any, any> | undefined>(
-    (prev, key) => {
-      const type = getType(target, key)
-      if (type === '@Mutation') {
-        return {
-          ...(prev || {}),
-          [key]: fieldConfigMap[key],
-        }
-      }
-      return prev
-    },
-    undefined,
-  )
+  const mutationFields = getFieldsByType(targets, '@Mutation')
   const mutationObjectType = mutationFields
     ? new GraphQLObjectType({
       name: 'Mutation',
@@ -46,19 +48,7 @@ export function schemaFactory(target: Function): GraphQLSchema {
     })
     : undefined
 
-  const subscriptionFields = Object.keys(fieldConfigMap).reduce<GraphQLFieldConfigMap<any, any> | undefined>(
-    (prev, key) => {
-      const type = getType(target, key)
-      if (type === '@Subscription') {
-        return {
-          ...(prev || {}),
-          [key]: fieldConfigMap[key],
-        }
-      }
-      return prev
-    },
-    undefined,
-  )
+  const subscriptionFields = getFieldsByType(targets, '@Subscription')
   const subscriptionObjectType = subscriptionFields
     ? new GraphQLObjectType({
       name: 'Subscription',
