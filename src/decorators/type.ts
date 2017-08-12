@@ -17,7 +17,7 @@ import {
 } from 'graphql'
 import * as GraphQLDate from 'graphql-date'
 
-import { Thunk } from '../utils'
+import { Thunk, once, Callable1 } from '../utils'
 
 const typeSymbol = Symbol('type')
 
@@ -37,7 +37,7 @@ export type TypeResolvable = Thunk<
   | DateConstructor
 >
 
-export function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
+export const createTypeResolver: Callable1<TypeResolvable, GraphQLTypeResolver> = once((type) => {
   const anyType: any = type
   if (anyType.resolveToInputType && anyType.resolveToOutputType) {
     return anyType
@@ -59,7 +59,14 @@ export function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
     }
 
     // input is a thunk, call with no argument and feed to createTypeResolver
-    return createTypeResolver((type as Function)())
+    return {
+      resolveToInputType() {
+        return createTypeResolver((type as Function)()).resolveToInputType()
+      },
+      resolveToOutputType() {
+        return createTypeResolver((type as Function)()).resolveToOutputType()
+      },
+    }
   }
 
   if (type instanceof GraphQLScalarType) {
@@ -151,7 +158,7 @@ export function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
   }
 
   throw new Error('Can not create type resolver')
-}
+})
 
 export function Type(type: TypeResolvable): Function {
   return (target: Object, key: string, index?: number) => {
