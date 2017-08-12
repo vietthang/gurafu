@@ -2,7 +2,7 @@ import 'mocha'
 import * as assert from 'assert'
 import { GraphQLString, GraphQLFloat } from 'graphql'
 
-import { ObjectType } from '../decorators/objectType'
+import { ObjectType } from '../objectType'
 import { Field } from '../decorators/field'
 import { Arg, Context, Info } from '../decorators/arg'
 import { Description } from '../decorators/description'
@@ -11,7 +11,7 @@ import { fieldsFactory, inputFieldsFactory } from './fieldsFactory'
 
 describe('Test fieldsFactory/inputFieldsFactory', () => {
   it('Should generate GraphQLFieldConfigMap with simple fields correctly', () => {
-    @ObjectType() class User {
+    class User extends ObjectType {
       @Field() id: string
 
       @Field('first_name')
@@ -50,7 +50,7 @@ describe('Test fieldsFactory/inputFieldsFactory', () => {
   })
 
   it('Should generate GraphQLFieldConfigMap with function field correctly', () => {
-    @ObjectType() class Dummy {
+    class Dummy extends ObjectType {
       @Field() plusOne(
         @Arg('value') value: number,
       ): number {
@@ -76,7 +76,7 @@ describe('Test fieldsFactory/inputFieldsFactory', () => {
   })
 
   it('Should generate GraphQLFieldConfigMap with @Context correctly', () => {
-    @ObjectType() class Dummy {
+    class Dummy extends ObjectType {
       @Field() returnContext(
         @Context() context: number,
       ): number {
@@ -96,7 +96,7 @@ describe('Test fieldsFactory/inputFieldsFactory', () => {
   })
 
   it('Should generate GraphQLFieldConfigMap with @Info correctly', () => {
-    @ObjectType() class Dummy {
+    class Dummy extends ObjectType {
       @Field() returnInfo(
         @Info() info: number,
       ): number {
@@ -116,7 +116,7 @@ describe('Test fieldsFactory/inputFieldsFactory', () => {
   })
 
   it('Should failed if not all parameter are mapped', () => {
-    @ObjectType() class Dummy {
+    class Dummy extends ObjectType {
       @Field() plusOne(
         value: number,
       ): number {

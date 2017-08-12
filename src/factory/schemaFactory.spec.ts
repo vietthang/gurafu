@@ -1,7 +1,7 @@
 import 'mocha'
 import * as assert from 'assert'
 
-import { ObjectType } from '../decorators/objectType'
+import { ObjectType } from '../objectType'
 import { Field } from '../decorators/field'
 import { Arg } from '../decorators/arg'
 import { Query, Mutation, Subscription } from '../decorators/schema'
@@ -10,16 +10,16 @@ import { objectTypeFactory } from './objectTypeFactory'
 
 describe('Test schemaFactory', () => {
   it('Should generate GraphQLSchema with simple fields correctly', () => {
-    @ObjectType() class User {
+    class User extends ObjectType {
       @Field() id: string
       @Field() email: string
     }
 
-    @ObjectType() class UserUpdate {
+    class UserUpdate extends ObjectType {
       @Field() email: string
     }
 
-    @ObjectType() class UserChanged {
+    class UserChanged extends ObjectType {
       @Field() email: string
     }
 

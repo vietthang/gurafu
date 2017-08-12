@@ -3,35 +3,23 @@ import {
   GraphQLInputObjectType,
 } from 'graphql'
 
-import { getObjectTypeName } from '../decorators/objectType'
+import { GraphObjectConstructor } from '../objectType'
 import { getDescription } from '../decorators/description'
 import { fieldsFactory, inputFieldsFactory } from './fieldsFactory'
 import { once, Callable1 } from '../utils'
 
-export const objectTypeFactory: Callable1<Function,GraphQLObjectType> = once((target) => {
-  const description = getDescription(target)
-  const name = getObjectTypeName(target)
-  if (!name) {
-    throw new Error(`Missing @ObjectType in ${target.name}`)
-  }
-
+export const objectTypeFactory: Callable1<GraphObjectConstructor, GraphQLObjectType> = once((target) => {
   return new GraphQLObjectType({
-    name,
-    description,
+    name: target.name,
+    description: getDescription(target),
     fields: () => fieldsFactory(target),
   })
 })
 
-export const inputObjectTypeFactory: Callable1<Function,GraphQLInputObjectType> = once((target) => {
-  const description = getDescription(target)
-  const name = getObjectTypeName(target)
-  if (!name) {
-    throw new Error(`Missing @ObjectType in ${target.name}`)
-  }
-
+export const inputObjectTypeFactory: Callable1<GraphObjectConstructor, GraphQLInputObjectType> = once((target) => {
   return new GraphQLInputObjectType({
-    name: name + 'Input',
-    description,
+    name: target.name + 'Input',
+    description: getDescription(target),
     fields: () => inputFieldsFactory(target),
   })
 })

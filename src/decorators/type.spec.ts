@@ -11,7 +11,7 @@ import {
   GraphQLNonNull,
 } from 'graphql'
 
-import { ObjectType } from './objectType'
+import { ObjectType } from '../objectType'
 import { Field } from './field'
 import { Type, getTypeResolver, List, NonNull } from './type'
 
@@ -151,8 +151,8 @@ describe('Test @Type/@List/@NonNull decorators', () => {
     assert.deepStrictEqual(resolver.resolveToOutputType(), new GraphQLList(GraphQLString))
   })
 
-  it('Should decorate using @ObjectType class correctly', () => {
-    @ObjectType() class A {
+  it('Should decorate using GraphObject class correctly', () => {
+    class A extends ObjectType {
       @Field() id: string
     }
     class Dummy {

@@ -7,7 +7,7 @@ import {
 
 import { getFieldNameMap } from '../decorators/field'
 import { getDescription } from '../decorators/description'
-import { getTypeResolver, createTypeResolver } from '../decorators/type'
+import { getTypeResolver, createTypeResolver, TypeResolvable } from '../decorators/type'
 import { getDepricationReason } from '../decorators/deprecated'
 import { getArgName, getContextIndex, getInfoIndex } from '../decorators/arg'
 import { getDefault } from '../decorators/default'
@@ -47,7 +47,7 @@ export const fieldsFactory: Callable1<Function, GraphQLFieldConfigMap<any, any>>
           const returnDesignType = Reflect.getMetadata('design:returntype', target.prototype, key)
           typeResolver = createTypeResolver(returnDesignType)
         } else {
-          typeResolver = createTypeResolver(fieldDesignType)
+          typeResolver = createTypeResolver(fieldDesignType as TypeResolvable)
         }
       }
       if (fieldDesignType === Function) {
@@ -119,7 +119,7 @@ export const inputFieldsFactory: Callable1<Function, GraphQLInputFieldConfigMap>
   return mapValues(fieldNameMap, (name, key) => {
     const description = getDescription(target, key)
     let typeResolver = getTypeResolver(target, key)
-    const fieldDesignType: Function = Reflect.getMetadata('design:type', target.prototype, key)
+    const fieldDesignType = Reflect.getMetadata('design:type', target.prototype, key)
     if (!typeResolver) {
       if (!fieldDesignType) {
         throw new Error('Failed to resolve GraphQLType. Can not find field design type')

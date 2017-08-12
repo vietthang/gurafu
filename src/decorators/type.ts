@@ -17,7 +17,7 @@ import {
 } from 'graphql'
 import * as GraphQLDate from 'graphql-date'
 
-import { objectTypeFactory, inputObjectTypeFactory } from '../factory/objectTypeFactory'
+import { Thunk } from '../utils'
 
 const typeSymbol = Symbol('type')
 
@@ -28,7 +28,14 @@ export interface GraphQLTypeResolver {
   resolveToOutputType(): GraphQLOutputType
 }
 
-export type TypeResolvable = GraphQLTypeResolver | GraphQLType | Function
+export type TypeResolvable = Thunk<
+  GraphQLTypeResolver
+  | GraphQLType
+  | StringConstructor
+  | NumberConstructor
+  | BooleanConstructor
+  | DateConstructor
+>
 
 export function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
   const anyType: any = type
@@ -37,6 +44,7 @@ export function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
   }
 
   if (typeof type === 'function') {
+    // resolve some native types
     switch (type) {
       case Boolean:
         return createTypeResolver(GraphQLBoolean)
@@ -50,14 +58,8 @@ export function createTypeResolver(type: TypeResolvable): GraphQLTypeResolver {
         throw new Error('Failed to resolve GraphQLType. The design type are too generic.')
     }
 
-    return {
-      resolveToInputType() {
-        return inputObjectTypeFactory(type)
-      },
-      resolveToOutputType() {
-        return objectTypeFactory(type)
-      },
-    }
+    // input is a thunk, call with no argument and feed to createTypeResolver
+    return createTypeResolver((type as Function)())
   }
 
   if (type instanceof GraphQLScalarType) {

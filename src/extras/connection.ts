@@ -1,8 +1,8 @@
-import { GraphQLType, GraphQLObjectType, GraphQLInputType } from 'graphql'
+import { GraphQLObjectType, GraphQLInputType } from 'graphql'
 import { connectionDefinitions } from 'graphql-relay'
 
 import { once } from '../utils'
-import { Type, GraphQLTypeResolver, createTypeResolver } from '../decorators/type'
+import { Type, GraphQLTypeResolver, createTypeResolver, TypeResolvable } from '../decorators/type'
 
 function resolveToConnectionDefinitions(subTypeResolver: GraphQLTypeResolver) {
   const type = subTypeResolver.resolveToOutputType()
@@ -14,7 +14,7 @@ function resolveToConnectionDefinitions(subTypeResolver: GraphQLTypeResolver) {
   })
 }
 
-export function Connection(type: GraphQLType | Function | GraphQLTypeResolver): Function & GraphQLTypeResolver {
+export function Connection(type: TypeResolvable): Function & GraphQLTypeResolver {
   const subTypeResolver = createTypeResolver(type)
   const typeResolver = {
     resolveToInputType(): GraphQLInputType {
@@ -32,7 +32,7 @@ export function Connection(type: GraphQLType | Function | GraphQLTypeResolver): 
   )
 }
 
-export function Edge(type: GraphQLType | Function | GraphQLTypeResolver): Function & GraphQLTypeResolver {
+export function Edge(type: TypeResolvable): Function & GraphQLTypeResolver {
   const subTypeResolver = createTypeResolver(type)
   const typeResolver = {
     resolveToInputType(): GraphQLInputType {

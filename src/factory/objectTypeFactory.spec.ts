@@ -2,13 +2,13 @@ import 'mocha'
 import * as assert from 'assert'
 import { GraphQLString } from 'graphql'
 
-import { ObjectType } from '../decorators/objectType'
+import { ObjectType } from '../objectType'
 import { Field } from '../decorators/field'
 import { objectTypeFactory, inputObjectTypeFactory } from './objectTypeFactory'
 
 describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
   it('Should generate GraphQLObjectType with simple fields correctly', () => {
-    @ObjectType() class User {
+    class User extends ObjectType {
       @Field() id: string
     }
 
@@ -28,7 +28,7 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
   })
 
   it('Should generate GraphQLInputObjectType with simple fields correctly', () => {
-    @ObjectType() class User {
+    class User extends ObjectType {
       @Field() id: string
     }
 
@@ -45,7 +45,7 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
   })
 
   it('Should generate same GraphQLInputObjectType everytime', () => {
-    @ObjectType() class User {
+    class User extends ObjectType {
       @Field() id: string
     }
     const objectType1 = objectTypeFactory(User)
@@ -54,13 +54,5 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
     const inputObjectType1 = inputObjectTypeFactory(User)
     const inputObjectType2 = inputObjectTypeFactory(User)
     assert.equal(inputObjectType1, inputObjectType2)
-  })
-
-  it('Should fail if try to generate from non @ObjectType class', () => {
-    class User {
-      @Field() id: string
-    }
-    assert.throws(() => objectTypeFactory(User))
-    assert.throws(() => inputObjectTypeFactory(User))
   })
 })

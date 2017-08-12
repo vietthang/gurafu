@@ -4,7 +4,7 @@ export { Arg, Context, Info } from './decorators/arg'
 
 export { Field } from './decorators/field'
 
-export { ObjectType } from './decorators/objectType'
+export { ObjectType } from './objectType'
 
 export { Description } from './decorators/description'
 

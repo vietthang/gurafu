@@ -1,15 +1,15 @@
 import 'mocha'
 import * as assert from 'assert'
 
-import { GraphQLScalarType, GraphQLString, StringValueNode, IntValueNode } from 'graphql'
+import { GraphQLScalarType, StringValueNode, IntValueNode } from 'graphql'
 import { toGlobalId } from 'graphql-relay'
 import { ID } from './id'
-import { ObjectType } from '../decorators/objectType'
+import { ObjectType } from '../objectType'
 import { Field } from '../decorators/field'
 
 describe('Test @ID decorator', () => {
   it('Should resolve to TypeResolver correctly', () => {
-    @ObjectType() class Dummy {
+    class Dummy extends ObjectType {
       @Field() id: string
     }
     const DummyIdTypeResolver = ID(Dummy)
@@ -39,14 +39,5 @@ describe('Test @ID decorator', () => {
     assert.equal(idType.parseLiteral(stringValueNode), '1')
     assert.throws(() => idType.parseLiteral(invalidStringValueNode))
     assert.throws(() => idType.parseLiteral(intValueNode))
-  })
-
-  it('Should fail to create ID type of non ObjectType class', () => {
-    class Dummy {
-      @Field() id: string
-    }
-
-    assert.throws(() => ID(Dummy).resolveToOutputType())
-    assert.throws(() => ID(GraphQLString).resolveToOutputType())
   })
 })
