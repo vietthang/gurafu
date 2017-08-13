@@ -2,41 +2,41 @@ import 'reflect-metadata'
 
 import { Field } from './field'
 
-const typeSymbol = Symbol('type')
+const schemaMethodKindSymbol = Symbol('schemaMethodKind')
 
 export function Mutation(name?: string): PropertyDecorator {
   return (target, key) => {
-    const oldType = Reflect.getMetadata(typeSymbol, target, key)
+    const oldType = Reflect.getMetadata(schemaMethodKindSymbol, target, key)
     if (oldType) {
       throw new Error(`Key ${key} has been decorated with ${oldType} already`)
     }
     Field(name)(target, key)
-    Reflect.defineMetadata(typeSymbol, '@Mutation', target, key)
+    Reflect.defineMetadata(schemaMethodKindSymbol, '@Mutation', target, key)
   }
 }
 
 export function Query(name?: string): PropertyDecorator {
   return (target, key) => {
-    const oldType = Reflect.getMetadata(typeSymbol, target, key)
+    const oldType = Reflect.getMetadata(schemaMethodKindSymbol, target, key)
     if (oldType) {
       throw new Error(`Key ${key} has been decorated with ${oldType} already`)
     }
     Field(name)(target, key)
-    Reflect.defineMetadata(typeSymbol, '@Query', target, key)
+    Reflect.defineMetadata(schemaMethodKindSymbol, '@Query', target, key)
   }
 }
 
 export function Subscription(name?: string): PropertyDecorator {
   return (target, key) => {
-    const oldType = Reflect.getMetadata(typeSymbol, target, key)
+    const oldType = Reflect.getMetadata(schemaMethodKindSymbol, target, key)
     if (oldType) {
       throw new Error(`Key ${key} has been decorated with ${oldType} already`)
     }
     Field(name)(target, key)
-    Reflect.defineMetadata(typeSymbol, '@Subscription', target, key)
+    Reflect.defineMetadata(schemaMethodKindSymbol, '@Subscription', target, key)
   }
 }
 
 export function getType(target: Function, key: string): '@Mutation' | '@Query' | '@Subscription' | undefined {
-  return Reflect.getMetadata(typeSymbol, target.prototype, key)
+  return Reflect.getMetadata(schemaMethodKindSymbol, target.prototype, key)
 }
