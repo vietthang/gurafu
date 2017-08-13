@@ -40,7 +40,7 @@ export function schemaFactory(...targets: Function[]): GraphQLSchema {
   })
 
   const mutationFields = getFieldsByType(targets, '@Mutation')
-  const mutationObjectType = mutationFields
+  const mutationObjectType = Object.keys(mutationFields).length > 0
     ? new GraphQLObjectType({
       name: 'Mutation',
       description: 'Root mutation',
@@ -49,7 +49,7 @@ export function schemaFactory(...targets: Function[]): GraphQLSchema {
     : undefined
 
   const subscriptionFields = getFieldsByType(targets, '@Subscription')
-  const subscriptionObjectType = subscriptionFields
+  const subscriptionObjectType = Object.keys(subscriptionFields).length > 0
     ? new GraphQLObjectType({
       name: 'Subscription',
       description: 'Root subscription',
