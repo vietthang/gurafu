@@ -1,6 +1,6 @@
 {
   "name": "gurafu",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Decorator-base library to build graphql model to exposed as restful/graphql service",
   "main": "build/src/index.js",
   "scripts": {
