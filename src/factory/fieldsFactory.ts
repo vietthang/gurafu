@@ -45,6 +45,9 @@ export const fieldsFactory: Callable1<Function, GraphQLFieldConfigMap<any, any>>
         }
         if (fieldDesignType === Function) {
           const returnDesignType = Reflect.getMetadata('design:returntype', target.prototype, key)
+          if (!returnDesignType) {
+            throw new Error(`Can not find design:returntype of ${target.name}.${key}`)
+          }
           typeResolver = createTypeResolver(returnDesignType)
         } else {
           typeResolver = createTypeResolver(fieldDesignType as TypeResolvable)
