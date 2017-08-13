@@ -161,8 +161,8 @@ export const createTypeResolver: Callable1<TypeResolvable, GraphQLTypeResolver> 
 })
 
 export function Type(type: TypeResolvable): Function {
-  return (target: Object, key: string, index?: number) => {
-    if (index !== undefined) {
+  return (target: Object, key: string, index?: number | PropertyDescriptor) => {
+    if (typeof index === 'number') {
       const parameterTypes = Reflect.getMetadata(parameterTypesSymbol, target) || {}
       Reflect.defineMetadata(parameterTypesSymbol, {
         ...parameterTypes,
@@ -193,7 +193,7 @@ export function List(type: TypeResolvable): Function & GraphQLTypeResolver {
     },
   }
   return Object.assign(
-    (target: Object, key: string, index?: number) => {
+    (target: Object, key: string, index?: number | PropertyDescriptor) => {
       return Type(typeResolver)(target, key, index)
     },
     typeResolver,
@@ -211,7 +211,7 @@ export function NonNull(type: TypeResolvable): Function & GraphQLTypeResolver {
     },
   }
   return Object.assign(
-    (target: Object, key: string, index?: number) => {
+    (target: Object, key: string, index?: number | PropertyDescriptor) => {
       return Type(typeResolver)(target, key, index)
     },
     typeResolver,

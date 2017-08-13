@@ -253,4 +253,15 @@ describe('Test @Type/@List/@NonNull decorators', () => {
     assert.deepStrictEqual(doSomethingResolver.resolveToInputType(), GraphQLString)
     assert.deepStrictEqual(doSomethingResolver.resolveToOutputType(), GraphQLString)
   })
+
+  it('Should decorate function return type correctly', () => {
+    class Dummy {
+      @Type(GraphQLInt) doSomething() {
+        return 1
+      }
+    }
+    const doSomethingResolver = getTypeResolver(Dummy, 'doSomething')!
+    assert.deepStrictEqual(doSomethingResolver.resolveToInputType(), GraphQLInt)
+    assert.deepStrictEqual(doSomethingResolver.resolveToOutputType(), GraphQLInt)
+  })
 })

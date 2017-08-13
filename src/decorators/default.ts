@@ -6,17 +6,17 @@ const defaultSymbol = Symbol('default')
 const parameterDefaultsSymbol = Symbol('parameterDefaults')
 
 export function Default(defaultValue: any): Function {
-  return (target: any, key: string, index?: number) => {
+  return (target: any, key: string, index?: number | PropertyDecorator) => {
     assert(typeof target === 'object')
     assert(typeof key === 'string')
-    if (index === undefined) {
-      Reflect.defineMetadata(defaultSymbol, defaultValue, target, key)
-    } else {
+    if (typeof index === 'number') {
       const parametersDefault = Reflect.getMetadata(parameterDefaultsSymbol, target) || {}
       Reflect.defineMetadata(parameterDefaultsSymbol, {
         ...parametersDefault,
         [index]: defaultValue,
       }, target, key)
+    } else {
+      Reflect.defineMetadata(defaultSymbol, defaultValue, target, key)
     }
   }
 }
