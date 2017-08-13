@@ -40,4 +40,18 @@ describe('Test @ID decorator', () => {
     assert.throws(() => idType.parseLiteral(invalidStringValueNode))
     assert.throws(() => idType.parseLiteral(intValueNode))
   })
+
+  it('Should resolve to same instance using ObjectType/Thunk<ObjectType> multiple times', () => {
+    class Dummy extends ObjectType {
+      @Field() id: string
+    }
+
+    const type0 = ID(Dummy).resolveToOutputType()
+    const type1 = ID(Dummy).resolveToOutputType()
+    const type2 = ID(() => Dummy).resolveToOutputType()
+    const type3 = ID(() => Dummy).resolveToOutputType()
+    assert.equal(type0, type1)
+    assert.equal(type2, type3)
+    assert.equal(type0, type2)
+  })
 })

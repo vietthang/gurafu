@@ -23,13 +23,13 @@ const typeSymbol = Symbol('type')
 
 const parameterTypesSymbol = Symbol('parameterTypes')
 
-export interface GraphQLTypeResolver {
+export interface TypeResolver {
   resolveToInputType(): GraphQLInputType
   resolveToOutputType(): GraphQLOutputType
 }
 
 export type TypeResolvable = Thunk<
-  GraphQLTypeResolver
+  TypeResolver
   | GraphQLType
   | StringConstructor
   | NumberConstructor
@@ -37,7 +37,7 @@ export type TypeResolvable = Thunk<
   | DateConstructor
 >
 
-export const createTypeResolver: Callable1<TypeResolvable, GraphQLTypeResolver> = once((type) => {
+export const createTypeResolver: Callable1<TypeResolvable, TypeResolver> = once((type) => {
   const anyType: any = type
   if (anyType.resolveToInputType && anyType.resolveToOutputType) {
     return anyType
@@ -174,7 +174,7 @@ export function Type(type: TypeResolvable): Function {
   }
 }
 
-export function getTypeResolver(target: Function, key: string, index?: number): GraphQLTypeResolver | undefined {
+export function getTypeResolver(target: Function, key: string, index?: number): TypeResolver | undefined {
   if (index === undefined) {
     return Reflect.getMetadata(typeSymbol, target.prototype, key)
   } else {
@@ -182,7 +182,7 @@ export function getTypeResolver(target: Function, key: string, index?: number): 
   }
 }
 
-export function List(type: TypeResolvable): Function & GraphQLTypeResolver {
+export function List(type: TypeResolvable): Function & TypeResolver {
   const subTypeResolver = createTypeResolver(type)
   const typeResolver = {
     resolveToInputType() {
@@ -200,7 +200,7 @@ export function List(type: TypeResolvable): Function & GraphQLTypeResolver {
   )
 }
 
-export function NonNull(type: TypeResolvable): Function & GraphQLTypeResolver {
+export function NonNull(type: TypeResolvable): Function & TypeResolver {
   const subTypeResolver = createTypeResolver(type)
   const typeResolver = {
     resolveToInputType() {

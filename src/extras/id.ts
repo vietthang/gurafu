@@ -1,27 +1,23 @@
 import * as assert from 'assert'
-import { GraphQLScalarType, GraphQLScalarTypeConfig, GraphQLObjectType, ValueNode } from 'graphql'
+import { GraphQLScalarType, GraphQLObjectType, ValueNode } from 'graphql'
 import { fromGlobalId, toGlobalId } from 'graphql-relay'
 
-import { once } from '../utils'
-import { Type, GraphQLTypeResolver, createTypeResolver, TypeResolvable } from '../decorators/type'
+import { once, Callable1 } from '../utils'
+import { Type, TypeResolver, createTypeResolver, TypeResolvable } from '../decorators/type'
 
-function resolveToScalarType(subTypeResolver: GraphQLTypeResolver): GraphQLScalarType {
-  const type = subTypeResolver.resolveToOutputType()
-  if (!(type instanceof GraphQLObjectType)) {
-    throw new Error('Can not create ID type of type other than GraphQLObjectType')
-  }
+const resolveObjectTypeToID: Callable1<GraphQLObjectType, GraphQLScalarType> = once((objectType) => {
   return new GraphQLScalarType({
-    name: type.name + 'ID',
-    description: `ID of ${type.name}`,
+    name: objectType.name + 'ID',
+    description: `ID of ${objectType.name}`,
     serialize(value: any) {
       assert(typeof value === 'string')
-      return toGlobalId(type.name, value)
+      return toGlobalId(objectType.name, value)
     },
     parseValue(value: any) {
       assert(typeof value === 'string')
       const resolvedId = fromGlobalId(value)
-      if (resolvedId.type !== type.name) {
-        throw new Error(`Invalid ID type, got ${resolvedId.type} but ${type.name} needed`)
+      if (resolvedId.type !== objectType.name) {
+        throw new Error(`Invalid ID type, got ${resolvedId.type} but ${objectType.name} needed`)
       }
       return resolvedId.id
     },
@@ -30,15 +26,23 @@ function resolveToScalarType(subTypeResolver: GraphQLTypeResolver): GraphQLScala
         throw new Error('Invalid value node kind, only string is supported')
       }
       const resolvedId = fromGlobalId(valueNode.value)
-      if (resolvedId.type !== type.name) {
-        throw new Error(`Invalid ID type, got ${resolvedId.type} but ${type.name} needed`)
+      if (resolvedId.type !== objectType.name) {
+        throw new Error(`Invalid ID type, got ${resolvedId.type} but ${objectType.name} needed`)
       }
       return resolvedId.id
     },
-  } as GraphQLScalarTypeConfig<string, string>)
-}
+  })
+})
 
-export function ID(type: TypeResolvable): Function & GraphQLTypeResolver {
+const resolveToScalarType: Callable1<TypeResolver, GraphQLScalarType> = once((subTypeResolver) => {
+  const type = subTypeResolver.resolveToOutputType()
+  if (!(type instanceof GraphQLObjectType)) {
+    throw new Error('Can not create ID type of type other than GraphQLObjectType')
+  }
+  return resolveObjectTypeToID(type)
+})
+
+export function ID(type: TypeResolvable): Function & TypeResolver {
   const subTypeResolver = createTypeResolver(type)
   const typeResolver = {
     resolveToInputType() {

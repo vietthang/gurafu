@@ -2,9 +2,9 @@ import { GraphQLObjectType, GraphQLInputType } from 'graphql'
 import { connectionDefinitions } from 'graphql-relay'
 
 import { once } from '../utils'
-import { Type, GraphQLTypeResolver, createTypeResolver, TypeResolvable } from '../decorators/type'
+import { Type, TypeResolver, createTypeResolver, TypeResolvable } from '../decorators/type'
 
-function resolveToConnectionDefinitions(subTypeResolver: GraphQLTypeResolver) {
+function resolveToConnectionDefinitions(subTypeResolver: TypeResolver) {
   const type = subTypeResolver.resolveToOutputType()
   if (!(type instanceof GraphQLObjectType)) {
     throw new Error('Can not create ID type of type other than GraphQLObjectType')
@@ -14,7 +14,7 @@ function resolveToConnectionDefinitions(subTypeResolver: GraphQLTypeResolver) {
   })
 }
 
-export function Connection(type: TypeResolvable): Function & GraphQLTypeResolver {
+export function Connection(type: TypeResolvable): Function & TypeResolver {
   const subTypeResolver = createTypeResolver(type)
   const typeResolver = {
     resolveToInputType(): GraphQLInputType {
@@ -32,7 +32,7 @@ export function Connection(type: TypeResolvable): Function & GraphQLTypeResolver
   )
 }
 
-export function Edge(type: TypeResolvable): Function & GraphQLTypeResolver {
+export function Edge(type: TypeResolvable): Function & TypeResolver {
   const subTypeResolver = createTypeResolver(type)
   const typeResolver = {
     resolveToInputType(): GraphQLInputType {
