@@ -163,11 +163,11 @@ export const createTypeResolver: Callable1<TypeResolvable, TypeResolver> = once(
 export function Type(type: TypeResolvable): Function {
   return (target: Object, key: string, index?: number | PropertyDescriptor) => {
     if (typeof index === 'number') {
-      const parameterTypes = Reflect.getMetadata(parameterTypesSymbol, target) || {}
+      const parameterTypes = Reflect.getMetadata(parameterTypesSymbol, target, key) || {}
       Reflect.defineMetadata(parameterTypesSymbol, {
         ...parameterTypes,
         [index]: createTypeResolver(type),
-      }, target, key!)
+      }, target, key)
     } else {
       Reflect.defineMetadata(typeSymbol, createTypeResolver(type), target, key)
     }
