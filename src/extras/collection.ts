@@ -12,11 +12,7 @@ const PagingType = new GraphQLObjectType({
   },
 })
 
-const resolveToCollection: Callable1<TypeResolver, GraphQLObjectType> = once((subTypeResolver) => {
-  const subType = subTypeResolver.resolveToOutputType()
-  if (!(subType instanceof GraphQLObjectType)) {
-    throw new Error('Can not create ID type of type other than GraphQLObjectType')
-  }
+const resolveObjectTypeToCollection: Callable1<GraphQLObjectType, GraphQLObjectType> = once((subType) => {
   return new GraphQLObjectType({
     name: `${subType.name}Collection`,
     fields: {
@@ -33,7 +29,11 @@ export function Collection(type: TypeResolvable): Function & TypeResolver {
       throw new Error('Collection type can not be used as input type')
     },
     resolveToOutputType() {
-      return resolveToCollection(subTypeResolver)
+      const subType = subTypeResolver.resolveToOutputType()
+      if (!(subType instanceof GraphQLObjectType)) {
+        throw new Error('Can not create ID type of type other than GraphQLObjectType')
+      }
+      return once(resolveObjectTypeToCollection)(subType)
     },
   }
   return Object.assign(
