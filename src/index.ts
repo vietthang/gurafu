@@ -19,3 +19,5 @@ export { schemaFactory } from './factory/schemaFactory'
 export { ID } from './extras/id'
 
 export { Connection, Edge } from './extras/connection'
+
+export { Collection } from './extras/collection'
