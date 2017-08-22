@@ -90,9 +90,6 @@ export const fieldsFactory: Callable1<Function, GraphQLFieldConfigMap<any, any>>
             if (!argName) {
               throw new Error('Can not find arg in argument index')
             }
-            if (args[argName] === undefined) {
-              throw new Error(`Argument ${argName} does not exist`)
-            }
             fnArgs[i] = args[argName]
           }
           return target.prototype[key].apply(source, fnArgs)
