@@ -11,6 +11,40 @@ import { schemaFactory } from './schemaFactory'
 import { objectTypeFactory } from './objectTypeFactory'
 
 describe('Test schemaFactory', () => {
+  it('Should generate GraphQLSchema with only query correctly', () => {
+    @ObjectType()
+    class User {
+      @Field() @Type(String) id: string
+      @Field() @Type(String) email: string
+    }
+
+    class Schema {
+      @Query() @Type(User) user: User
+    }
+
+    const graphQLSchema = schemaFactory(Schema)
+    const queryType = graphQLSchema.getQueryType()
+
+    assert.equal(queryType.name, 'Query')
+    assert.equal(queryType.description, 'Root query')
+    assert.deepEqual(
+      queryType.getFields(),
+      {
+        user: {
+          type: objectTypeFactory(User),
+          name: 'user',
+          description: undefined,
+          args: [],
+          resolve: undefined,
+          isDeprecated: false,
+          deprecationReason: undefined,
+        },
+      },
+    )
+
+    assert.equal(undefined, graphQLSchema.getMutationType())
+    assert.equal(undefined, graphQLSchema.getSubscriptionType())
+  })
   it('Should generate GraphQLSchema with simple fields correctly', () => {
     @ObjectType()
     class User {
