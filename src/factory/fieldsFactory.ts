@@ -5,13 +5,14 @@ import {
   GraphQLInputFieldConfigMap,
 } from 'graphql'
 
+import { once, Callable1 } from '../utils'
 import { getFieldNameMap } from '../decorators/field'
 import { getDescription } from '../decorators/description'
-import { getTypeResolver, createTypeResolver, TypeResolvable } from '../decorators/type'
+import { getType } from '../decorators/type'
 import { getDepricationReason } from '../decorators/deprecated'
 import { getArgName, getContextIndex, getInfoIndex } from '../decorators/arg'
 import { getDefault } from '../decorators/default'
-import { once, Callable1 } from '../utils'
+import { getTypeResolver } from './typeFactory'
 
 function mapValues<T, U>(input: { [key: string]: T }, iteratee: (ele: T, key: string) => U): { [key: string]: U } {
   return Object.keys(input).reduce(
@@ -35,25 +36,13 @@ export const fieldsFactory: Callable1<Function, GraphQLFieldConfigMap<any, any>>
       const name = fieldNameMap[key]
       const description = getDescription(target, key)
       const deprecationReason = getDepricationReason(target, key)
-      let typeResolver = getTypeResolver(target, key)
+      const keyType = getType(target, key)
       let resolveFn: GraphQLFieldResolver<any, any> | undefined
       let args: GraphQLFieldConfigArgumentMap | undefined
-      const fieldDesignType: Function = Reflect.getMetadata('design:type', target.prototype, key)
-      if (!typeResolver) {
-        if (!fieldDesignType) {
-          throw new Error('Failed to resolve GraphQLType. Can not find field design type')
-        }
-        if (fieldDesignType === Function) {
-          const returnDesignType = Reflect.getMetadata('design:returntype', target.prototype, key)
-          if (!returnDesignType) {
-            throw new Error(`Can not find design:returntype of ${target.name}.${key}`)
-          }
-          typeResolver = createTypeResolver(returnDesignType)
-        } else {
-          typeResolver = createTypeResolver(fieldDesignType as TypeResolvable)
-        }
+      if (!keyType) {
+        throw new Error(`Missing type decorator for key ${key} in ${target.name}`)
       }
-      if (fieldDesignType === Function) {
+      if (typeof target.prototype[key] === 'function') {
         const argumentsLength: number = target.prototype[key].length
         const contextIndex = getContextIndex(target, key)
         const infoIndex = getInfoIndex(target, key)
@@ -64,10 +53,8 @@ export const fieldsFactory: Callable1<Function, GraphQLFieldConfigMap<any, any>>
           if (!argName) {
             continue
           }
-          let argTypeResolver = getTypeResolver(target, key, i)
-          if (!argTypeResolver) {
-            argTypeResolver = createTypeResolver(paramTypes[i])
-          }
+          const type = getType(target, key, i)
+          const argTypeResolver = getTypeResolver(type || paramTypes[i])
 
           args[argName] = {
             type: argTypeResolver.resolveToInputType(),
@@ -99,7 +86,7 @@ export const fieldsFactory: Callable1<Function, GraphQLFieldConfigMap<any, any>>
       return {
         ...prev,
         [name]: {
-          type: typeResolver.resolveToOutputType(),
+          type: getTypeResolver(keyType).resolveToOutputType(),
           description,
           deprecationReason,
           resolve: resolveFn,
@@ -118,16 +105,12 @@ export const inputFieldsFactory: Callable1<Function, GraphQLInputFieldConfigMap>
   }
   return mapValues(fieldNameMap, (name, key) => {
     const description = getDescription(target, key)
-    let typeResolver = getTypeResolver(target, key)
-    const fieldDesignType = Reflect.getMetadata('design:type', target.prototype, key)
-    if (!typeResolver) {
-      if (!fieldDesignType) {
-        throw new Error('Failed to resolve GraphQLType. Can not find field design type')
-      }
-      typeResolver = createTypeResolver(fieldDesignType)
+    const keyType = getType(target, key)
+    if (!keyType) {
+      throw new Error(`Missing type decorator for key ${key} in ${target.name}`)
     }
     return {
-      type: typeResolver.resolveToInputType(),
+      type: getTypeResolver(keyType).resolveToInputType(),
       description,
       defaultValue: getDefault(target, key),
     }

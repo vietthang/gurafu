@@ -1,5 +1,3 @@
-import 'reflect-metadata'
-
 import { Field } from './field'
 
 const schemaMethodKindSymbol = Symbol('schemaMethodKind')

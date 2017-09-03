@@ -15,7 +15,7 @@
     "removeComments": true,
     "stripInternal": true,
     "declaration": true,
-    "lib": ["es6", "esnext.asynciterable"],
+    "lib": ["es6", "esnext.asynciterable", "dom"],
     "noStrictGenericChecks": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true

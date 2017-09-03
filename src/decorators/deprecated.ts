@@ -1,5 +1,3 @@
-import 'reflect-metadata'
-
 const deprecationReasonSymbol = Symbol('deprecationReason')
 
 export function Deprecated(deprecationReason: string = 'Deprecated'): PropertyDecorator {

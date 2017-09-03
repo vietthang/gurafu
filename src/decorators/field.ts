@@ -1,6 +1,3 @@
-import 'reflect-metadata'
-import 'source-map-support/register'
-
 export interface FieldNameMap {
   [name: string]: string
 }

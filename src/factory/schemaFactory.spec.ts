@@ -1,8 +1,10 @@
+import 'reflect-metadata'
 import 'mocha'
 import * as assert from 'assert'
 
-import { ObjectType } from '../objectType'
+import { ObjectType } from '../decorators/objectType'
 import { Field } from '../decorators/field'
+import { Type } from '../decorators/type'
 import { Arg } from '../decorators/arg'
 import { Query, Mutation, Subscription } from '../decorators/schema'
 import { schemaFactory } from './schemaFactory'
@@ -10,25 +12,28 @@ import { objectTypeFactory } from './objectTypeFactory'
 
 describe('Test schemaFactory', () => {
   it('Should generate GraphQLSchema with simple fields correctly', () => {
-    class User extends ObjectType {
-      @Field() id: string
-      @Field() email: string
+    @ObjectType()
+    class User {
+      @Field() @Type(String) id: string
+      @Field() @Type(String) email: string
     }
 
-    class UserUpdate extends ObjectType {
-      @Field() email: string
+    @ObjectType()
+    class UserUpdate {
+      @Field() @Type(String) email: string
     }
 
-    class UserChanged extends ObjectType {
-      @Field() email: string
+    @ObjectType()
+    class UserChanged {
+      @Field() @Type(String) email: string
     }
 
     class Schema {
-      @Query() user: User
+      @Query() @Type(User) user: User
 
-      @Subscription() userChanged: UserChanged
+      @Subscription() @Type(UserChanged) userChanged: UserChanged
 
-      @Mutation()
+      @Mutation() @Type(User)
       updateUser(
         @Arg('id') id: string,
         @Arg('body') body: UserUpdate,

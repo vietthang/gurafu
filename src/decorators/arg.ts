@@ -1,5 +1,3 @@
-import 'reflect-metadata'
-
 const parameterNamesSymbol = Symbol('parameterDefaults')
 
 const contextSymbol = Symbol('context')

@@ -1,14 +1,9 @@
-import 'reflect-metadata'
-import * as assert from 'assert'
-
 const defaultSymbol = Symbol('default')
 
 const parameterDefaultsSymbol = Symbol('parameterDefaults')
 
 export function Default(defaultValue: any): Function {
   return (target: any, key: string, index?: number | PropertyDecorator) => {
-    assert(typeof target === 'object')
-    assert(typeof key === 'string')
     if (typeof index === 'number') {
       const parametersDefault = Reflect.getMetadata(parameterDefaultsSymbol, target) || {}
       Reflect.defineMetadata(parameterDefaultsSymbol, {

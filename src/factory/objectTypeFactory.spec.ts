@@ -1,15 +1,18 @@
+import 'reflect-metadata'
 import 'mocha'
 import * as assert from 'assert'
 import { GraphQLString } from 'graphql'
 
-import { ObjectType } from '../objectType'
+import { ObjectType } from '../decorators/objectType'
 import { Field } from '../decorators/field'
+import { Type } from '../decorators/type'
 import { objectTypeFactory, inputObjectTypeFactory } from './objectTypeFactory'
 
 describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
   it('Should generate GraphQLObjectType with simple fields correctly', () => {
-    class User extends ObjectType {
-      @Field() id: string
+    @ObjectType()
+    class User {
+      @Field() @Type(GraphQLString) id: string
     }
 
     const objectType = objectTypeFactory(User)
@@ -28,8 +31,9 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
   })
 
   it('Should generate GraphQLInputObjectType with simple fields correctly', () => {
-    class User extends ObjectType {
-      @Field() id: string
+    @ObjectType()
+    class User {
+      @Field() @Type(GraphQLString) id: string
     }
 
     const inputObjectType = inputObjectTypeFactory(User)
@@ -45,8 +49,9 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
   })
 
   it('Should generate same GraphQLInputObjectType everytime', () => {
-    class User extends ObjectType {
-      @Field() id: string
+    @ObjectType()
+    class User {
+      @Field() @Type(GraphQLString) id: string
     }
     const objectType1 = objectTypeFactory(User)
     const objectType2 = objectTypeFactory(User)

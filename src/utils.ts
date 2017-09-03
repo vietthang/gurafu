@@ -19,5 +19,3 @@ export function once<T extends object, U>(callable: Callable1<T, U>): Callable1<
     return cachedResult
   }
 }
-
-export type Thunk<T> = T | (() => T)

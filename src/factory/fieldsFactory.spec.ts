@@ -1,8 +1,10 @@
+import 'reflect-metadata'
 import 'mocha'
 import * as assert from 'assert'
 import { GraphQLString, GraphQLFloat } from 'graphql'
 
-import { ObjectType } from '../objectType'
+import { Type } from '../decorators/type'
+import { ObjectType } from '../decorators/objectType'
 import { Field } from '../decorators/field'
 import { Arg, Context, Info } from '../decorators/arg'
 import { Description } from '../decorators/description'
@@ -10,15 +12,28 @@ import { Deprecated } from '../decorators/deprecated'
 import { fieldsFactory, inputFieldsFactory } from './fieldsFactory'
 
 describe('Test fieldsFactory/inputFieldsFactory', () => {
-  it('Should generate GraphQLFieldConfigMap with simple fields correctly', () => {
-    class User extends ObjectType {
-      @Field() id: string
+  it('Should throws if missing type decorator for one or more field', () => {
+    @ObjectType()
+    class User {
+      @Field()
+      id: string
+    }
 
-      @Field('first_name')
+    assert.throws(() => fieldsFactory(User))
+    assert.throws(() => inputFieldsFactory(User))
+  })
+
+  it('Should resolve GraphQLFieldConfigMap with simple fields correctly', () => {
+    @ObjectType()
+    class User {
+      @Field() @Type(GraphQLString)
+      id: string
+
+      @Field('first_name') @Type(GraphQLString)
       @Description('User first name')
       firstName: string
 
-      @Field('last_name')
+      @Field('last_name') @Type(GraphQLString)
       @Deprecated('Use first name')
       lastName: string
     }
@@ -50,8 +65,10 @@ describe('Test fieldsFactory/inputFieldsFactory', () => {
   })
 
   it('Should generate GraphQLFieldConfigMap with function field correctly', () => {
-    class Dummy extends ObjectType {
-      @Field() plusOne(
+    @ObjectType()
+    class Dummy {
+      @Field() @Type(GraphQLFloat)
+      plusOne(
         @Arg('value') value: number,
       ): number {
         return 1 + value
@@ -76,8 +93,10 @@ describe('Test fieldsFactory/inputFieldsFactory', () => {
   })
 
   it('Should generate GraphQLFieldConfigMap with @Context correctly', () => {
-    class Dummy extends ObjectType {
-      @Field() returnContext(
+    @ObjectType()
+    class Dummy {
+      @Field() @Type(GraphQLFloat)
+      returnContext(
         @Context() context: number,
       ): number {
         return context
@@ -96,8 +115,10 @@ describe('Test fieldsFactory/inputFieldsFactory', () => {
   })
 
   it('Should generate GraphQLFieldConfigMap with @Info correctly', () => {
-    class Dummy extends ObjectType {
-      @Field() returnInfo(
+    @ObjectType()
+    class Dummy {
+      @Field() @Type(GraphQLFloat)
+      returnInfo(
         @Info() info: number,
       ): number {
         return info
@@ -116,8 +137,10 @@ describe('Test fieldsFactory/inputFieldsFactory', () => {
   })
 
   it('Should failed if not all parameter are mapped', () => {
-    class Dummy extends ObjectType {
-      @Field() plusOne(
+    @ObjectType()
+    class Dummy {
+      @Field() @Type(GraphQLFloat)
+      plusOne(
         value: number,
       ): number {
         return value
