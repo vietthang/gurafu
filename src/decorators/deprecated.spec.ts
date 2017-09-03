@@ -13,6 +13,14 @@ describe('Test @Deprecated decorator', () => {
     assert.equal(getDepricationReason(Dummy, 'id'), 'Old version')
   })
 
+  it('Should add correct metadata to property', () => {
+    class Dummy {
+      @Deprecated()
+      id: string
+    }
+    assert.equal(getDepricationReason(Dummy, 'id'), 'Deprecated')
+  })
+
   it('Should get undefined deprication reason if property have not decorated with @Deprecated', () => {
     class Dummy {
       id: string
