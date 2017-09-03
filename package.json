@@ -26,26 +26,21 @@
   "license": "MIT",
   "devDependencies": {
     "@types/graphql": "^0.10.2",
-    "@types/graphql-date": "^1.0.1",
-    "@types/graphql-relay": "^0.4.2",
-    "@types/knex": "^0.0.57",
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.10",
     "dts-bundle": "^0.7.2",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
+    "reflect-metadata": "^0.1.10",
     "source-map-support": "^0.4.14",
     "ts-node": "^3.2.0",
     "tslint": "^4.5.1",
     "tslint-config-standard": "^4.0.0",
-    "typescript": "^2.4.1"
+    "typescript": "^2.5.2"
   },
   "dependencies": {
-    "graphql": "^0.10.5",
-    "graphql-date": "^1.0.3",
-    "graphql-relay": "^0.5.2",
-    "reflect-metadata": "^0.1.10"
+    "graphql": "^0.10.5"
   },
   "typings": "build/src/gurafu.d.ts",
   "nyc": {
@@ -70,5 +65,8 @@
     ],
     "all": true
   },
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "reflect-metadata": "^0.1.10"
+  }
 }

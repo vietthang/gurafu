@@ -2,38 +2,15 @@
 # yarn lockfile v1
 
 
-"@types/bluebird@*":
-  version "3.5.8"
-  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.8.tgz#242a83379f06c90f96acf6d1aeab3af6faebdb98"
-
-"@types/graphql-date@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/graphql-date/-/graphql-date-1.0.1.tgz#67e02a49439c918857acb3448dbc4ed1a1aaa4e8"
-  dependencies:
-    "@types/graphql" "*"
-
-"@types/graphql-relay@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@types/graphql-relay/-/graphql-relay-0.4.2.tgz#d26bb1e793bb265e4dbcd705f58d42ee84d02d3f"
-  dependencies:
-    "@types/graphql" "*"
-
-"@types/graphql@*", "@types/graphql@^0.10.2":
+"@types/graphql@^0.10.2":
   version "0.10.2"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.10.2.tgz#d7c79acbaa17453b6681c80c34b38fcb10c4c08c"
-
-"@types/knex@^0.0.57":
-  version "0.0.57"
-  resolved "https://registry.yarnpkg.com/@types/knex/-/knex-0.0.57.tgz#fb4440494c585109e44507606724f16289480fa2"
-  dependencies:
-    "@types/bluebird" "*"
-    "@types/node" "*"
 
 "@types/mocha@^2.2.41":
   version "2.2.41"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.41.tgz#e27cf0817153eb9f2713b2d3f6c68f1e1c3ca608"
 
-"@types/node@*", "@types/node@^8.0.10":
+"@types/node@^8.0.10":
   version "8.0.10"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.10.tgz#12efec9183b072d5f951cf86395a4c780f868a17"
 
@@ -106,13 +83,6 @@ array-unique@^0.2.1:
 arrify@^1.0.0, arrify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
-
-assert-err@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/assert-err/-/assert-err-1.1.0.tgz#c05062799a1d97d3f5eaa258e3242aab499fc8ef"
-  dependencies:
-    escape-string-regexp "^1.0.5"
-    object-assign "^4.1.0"
 
 async@1.x, async@^1.4.0:
   version "1.5.2"
@@ -662,16 +632,6 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2:
 "graceful-readlink@>= 1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
-
-graphql-date@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/graphql-date/-/graphql-date-1.0.3.tgz#31ce05ae40ed8c8ceb040364060109771e712e91"
-  dependencies:
-    assert-err "^1.0.0"
-
-graphql-relay@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/graphql-relay/-/graphql-relay-0.5.2.tgz#40ff714efd60c2cd89e0bcc79e2afa6d87fa8673"
 
 graphql@^0.10.5:
   version "0.10.5"
@@ -1667,9 +1627,9 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-typescript@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.4.1.tgz#c3ccb16ddaa0b2314de031e7e6fee89e5ba346bc"
+typescript@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.5.2.tgz#038a95f7d9bbb420b1bf35ba31d4c5c1dd3ffe34"
 
 uglify-js@^2.6:
   version "2.8.23"
