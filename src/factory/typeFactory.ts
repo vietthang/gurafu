@@ -36,8 +36,7 @@ export const getTypeResolver: Callable1<TypeResolvable, TypeResolver> = once((ty
         return getTypeResolver(GraphQLString)
     }
 
-    const name = getObjectTypeName(type)
-    if (name !== undefined) {
+    if (type.prototype && getObjectTypeName(type) !== undefined) {
       return {
         resolveToInputType() {
           return inputObjectTypeFactory(type)

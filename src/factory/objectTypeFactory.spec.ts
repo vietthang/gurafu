@@ -60,4 +60,13 @@ describe('Test objectTypeFactory/inputObjectTypeFactory', () => {
     const inputObjectType2 = inputObjectTypeFactory(User)
     assert.equal(inputObjectType1, inputObjectType2)
   })
+
+  it('Should throws when try to resolve from class not decorated with @ObjectType', () => {
+    class User {
+      @Field() @Type(GraphQLString) id: string
+    }
+
+    assert.throws(() => objectTypeFactory(User))
+    assert.throws(() => inputObjectTypeFactory(User))
+  })
 })
