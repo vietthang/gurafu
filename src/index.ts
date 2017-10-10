@@ -29,3 +29,39 @@ export { String, Boolean, Float, Int } from './types/native'
 export { Nil, GraphQLNil } from './types/nil'
 
 export { DateTime, GraphQLDateTime } from './types/dateTime'
+
+export function decorate(): Function {
+  return (target: any, key: any, valueOrIndex: any, descriptor: any) => {
+    console.log('##########')
+    console.log('target', target)
+    console.log('key', key)
+    console.log('valueOrIndex', valueOrIndex)
+    console.log('descriptor', descriptor)
+  }
+}
+
+@decorate()
+export class User {
+
+  @decorate()
+  static staticInnerClass = class UserCreation {
+
+  }
+
+  @decorate()
+  static staticMethod(id: string, @decorate() staticMethodArg: any) {
+
+  }
+
+  @decorate()
+  static staticProperty: string
+
+  @decorate()
+  memberProperty: string = 'a'
+
+  @decorate()
+  memberMethod(id: string, @decorate() memberMethodArg: any) {
+
+  }
+
+}
