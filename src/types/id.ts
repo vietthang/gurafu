@@ -15,10 +15,12 @@ function base64Encode(str: string): string {
     return Buffer.from(str).toString('base64')
   }
 
+  /* istanbul ignore next */
   if (typeof btoa !== 'undefined') {
     return btoa(str)
   }
 
+  /* istanbul ignore next */
   throw new Error('Failed to encode string to base64')
 }
 
@@ -27,10 +29,12 @@ function base64Decode(str: string): string {
     return Buffer.from(str, 'base64').toString()
   }
 
+  /* istanbul ignore next */
   if (typeof atob !== 'undefined') {
     return atob(str)
   }
 
+  /* istanbul ignore next */
   throw new Error('Failed to decode base64 string')
 }
 
@@ -72,8 +76,6 @@ const resolveObjectTypeToID: Callable1<GraphQLObjectType, GraphQLScalarType> = o
         throw new GraphQLError(
           'Invalid value node kind, only string is supported',
           [valueNode],
-          valueNode.loc && valueNode.loc.source,
-          valueNode.loc && [valueNode.loc.start],
         )
       }
       const resolvedId = fromGlobalId(valueNode.value)
@@ -81,8 +83,6 @@ const resolveObjectTypeToID: Callable1<GraphQLObjectType, GraphQLScalarType> = o
         throw new GraphQLError(
           `Invalid ID type, got ${resolvedId.type} but ${objectType.name} needed`,
           [valueNode],
-          valueNode.loc && valueNode.loc.source,
-          valueNode.loc && [valueNode.loc.start],
         )
       }
       return resolvedId.id

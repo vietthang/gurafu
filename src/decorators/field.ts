@@ -33,7 +33,6 @@ export function Field(arg0?: TypeResolvable | string, arg1?: TypeResolvable): Pr
       [key]: name || key,
     }, target)
     if (type) {
-      console.log(type, target, key)
       Type(type)(target, key)
     }
   }
