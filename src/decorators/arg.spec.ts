@@ -15,6 +15,12 @@ describe('Test @Arg/@Context/@Info decorator', () => {
       ) {
         return
       }
+
+      callSomething2(
+        @Arg() arg: string,
+      ) {
+        return
+      }
     }
 
     assert.equal(getArgName(Dummy, 'callSomething', 0), 'decorated')
@@ -25,5 +31,7 @@ describe('Test @Arg/@Context/@Info decorator', () => {
     assert.equal(getArgName(Dummy, 'invalidKey', 0), undefined)
     assert.equal(getContextIndex(Dummy, 'invalidKey'), undefined)
     assert.equal(getInfoIndex(Dummy, 'invalidKey'), undefined)
+
+    assert.equal(getArgName(Dummy, 'callSomething2', 0), 'arg')
   })
 })

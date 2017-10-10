@@ -1,15 +1,17 @@
+import { getFunctionArgs } from '../utils'
+
 const parameterNamesSymbol = Symbol('parameterDefaults')
 
 const contextSymbol = Symbol('context')
 
 const infoSymbol = Symbol('context')
 
-export function Arg(name: string): ParameterDecorator {
-  return (target: Object, key: string, index: number) => {
+export function Arg(name?: string): ParameterDecorator {
+  return (target: any, key: string, index: number) => {
     const parametersDefault = Reflect.getMetadata(parameterNamesSymbol, target, key) || {}
     Reflect.defineMetadata(parameterNamesSymbol, {
       ...parametersDefault,
-      [index]: name,
+      [index]: name || getFunctionArgs(target[key])[index],
     }, target, key)
   }
 }
